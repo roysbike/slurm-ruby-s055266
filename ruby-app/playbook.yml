@@ -18,14 +18,13 @@
     app_db_password: 2sDM1az
 
   roles:
-#    - role: roles/postgres
-#
-#      become: true
-
-    - role: roles/nginxinc.nginx
+    - role: roles/postgres
       become: true
 
     - role: app
+      become: true
+
+    - role: roles/nginxinc.nginx
       become: true
 
   tasks:
