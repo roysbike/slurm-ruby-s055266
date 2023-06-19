@@ -3,6 +3,7 @@ FROM ruby:2.6.4
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get install -y nodejs
+RUN npm install -g yarn
 
 ARG SECRET_KEY_BASE=$SECRET_KEY_BASE
 ARG RAILS_ENV=$RAILS_ENV
@@ -18,7 +19,7 @@ WORKDIR /app
 #RUN bundle clean --force
 RUN bundle config build.nokogiri --use-system-libraries
 RUN bundle install --clean --no-cache --without development
-
+RUN bundle exec rake assets:precompile RAILS_ENV=RAILS_ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
 ENV RAILS_ENV=$RAILS_ENV
 ENV RAILS_LOG_TO_STOUT=$RAILS_LOG_TO_STDOUT

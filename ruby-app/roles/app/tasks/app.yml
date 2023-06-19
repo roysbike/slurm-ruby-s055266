@@ -1,11 +1,11 @@
 ---
-- name: "Copy slurm_service app code"
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/{{ local_app_code }}"
-    dest: "{{ app_dir }}"
-    owner: "{{ app_user }}"
-    group: "{{ app_user }}"
-    mode: "0644"
+#- name: "Copy slurm_service app code"
+#  ansible.builtin.copy:
+#    src: "{{ playbook_dir }}/{{ local_app_code }}"
+#    dest: "{{ app_dir }}"
+#    owner: "{{ app_user }}"
+#    group: "{{ app_user }}"
+#    mode: "0644"
 
 - name: Copy nginx.conf
   ansible.builtin.copy:
@@ -24,10 +24,12 @@
 - name: Install requirements for an app
   ansible.builtin.shell: |
      /usr/local/bin/bundle config build.nokogiri --use-system-libraries
-     /usr/local/bin/bundle install --clean --no-cache --without development
+     /usr/local/bin/bundle install --no-cache --without development
+     /usr/local/bin/bundle exec rake assets:precompile RAILS_ENV="{{ rails_env }}" SECRET_KEY_BASE="{{ app_secret }}"
   args:
     chdir: "{{ app_dir }}"
   become: yes
   become_method: sudo
   become_user: "{{ app_user }}"
   ignore_errors: true
+#     /usr/local/bin/bundle install --clean --no-cache --without development

@@ -39,16 +39,16 @@
         dest: /usr/local/bin/docker-compose
         mode: 'u+x,g+x'
 
-     - name: Create symlink for docker-compose
-       file:
-         src: /usr/local/bin/docker-compose
-         dest: /usr/bin/docker-compose
-         state: link
+    - name: Create symlink for docker-compose
+      file:
+        src: /usr/local/bin/docker-compose
+        dest: /usr/bin/docker-compose
+        state: link
 
-     - name: Copy nginx.conf
-       copy:
-         src: "{{ playbook_dir }}/files/nginx.conf"
-         dest: /home/roys/docker/xpaste_practicum/config/nginx.conf
+    - name: Copy nginx.conf
+      copy:
+        src: "{{ playbook_dir }}/files/nginx.conf"
+        dest: /home/roys/docker/xpaste_practicum/config/nginx.conf
 
 - name: Deploy application using Docker Compose
   hosts: all
