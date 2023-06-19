@@ -10,8 +10,8 @@
 - name: Copy nginx.conf
   ansible.builtin.copy:
   copy:
-     src: "{{ playbook_dir }}"/files/nginx.conf
-     dest: "{{ local_app_code }}"/config/nginx.conf
+     src: "{{ playbook_dir }}/files/nginx.conf"
+     dest: "{{ local_app_code }}/config/nginx.conf"
 
 - name: Create directory unix
   file:
