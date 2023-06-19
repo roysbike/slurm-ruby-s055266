@@ -7,11 +7,11 @@
     group: "{{ app_user }}"
     mode: "0644"
 
-- name: Copy nginx.conf
-  ansible.builtin.copy:
-  copy:
-     src: "{{ playbook_dir }}/files/nginx.conf"
-     dest: "{{ local_app_code }}/config/nginx.conf"
+#- name: Copy nginx.conf
+#  ansible.builtin.copy:
+#  copy:
+#     src: "{{ playbook_dir }}/files/nginx.conf"
+#     dest: "{{ local_app_code }}/config/nginx.conf"
 
 - name: Create directory unix
   file:
