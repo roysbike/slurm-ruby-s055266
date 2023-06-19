@@ -1,0 +1,68 @@
+---
+- name: Install PostgreSQL Server
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python-ipaddress
+    - python-psycopg2
+    - postgresql-server
+    - postgresql-contrib
+    - postgresql-devel
+
+- name: Check if PostgreSQL data directory is empty
+  find:
+    paths: /var/lib/pgsql/data
+    patterns: "*"
+  register: data_files
+
+- name: Initialize PostgreSQL database
+  command: postgresql-setup initdb
+  when: data_files.matched == 0
+
+- name: Start and enable PostgreSQL
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create App database
+  postgresql_db:
+    state: present
+    db: "{{ app_db }}"
+  become: yes
+  become_user: postgres
+
+- name: "Create db user"
+  postgresql_user:
+    state: present
+    name: "{{ app_db_user }}"
+    password: "{{ app_db_password }}"
+  become: yes
+  become_user: postgres
+
+- name: "Grant db user access to app db"
+  postgresql_privs:
+    type: database
+    database: "{{ app_db }}"
+    roles: "{{ app_db_user }}"
+    grant_option: no
+    privs: all
+  become: yes
+  become_user: postgres
+
+- name: "Allow md5 connection for the db user"
+  postgresql_pg_hba:
+    dest: "~/data/pg_hba.conf"
+    contype: host
+    databases: all
+    method: md5
+    users: "{{ app_db_user }}"
+    create: true
+  become: yes
+  become_user: postgres
+
+- name: Restart PostgreSQL
+  systemd:
+    name: postgresql
+    state: restarted

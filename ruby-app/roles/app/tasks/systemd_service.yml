@@ -1,0 +1,8 @@
+---
+- name: Setup systemd service
+  template:
+    dest: /usr/lib/systemd/system/puma_service.service
+    src: templates/puma_service.systemd.j2
+
+- name: Reload systemd daemon
+  command: systemctl daemon-reload

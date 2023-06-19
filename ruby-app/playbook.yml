@@ -1,0 +1,37 @@
+---
+- name: Deploy and configure myapp
+  hosts: slurm2.360on.ru
+
+  vars:
+    app_dir: /tmp/xpaste_practicum
+    local_app_code: files/xpaste_practicum
+    local_nginx_conf: files/xpaste_practicum/config/nginx.conf
+    app_user: roys
+    app_name: puma_service
+    app_secret: 34mvds2
+    rails_log_to_stdout: 1
+    rails_env: production
+    db_host: 127.0.0.1
+    db_port: 5432
+    app_db: app
+    app_db_user: app
+    app_db_password: 2sDM1az
+
+  roles:
+#    - role: roles/postgres
+#
+#      become: true
+
+    - role: roles/nginxinc.nginx
+      become: true
+
+    - role: app
+      become: true
+
+  tasks:
+    - name: Start Puma service
+      become: true
+      systemd:
+        name: puma_service
+        state: started
+        enabled: yes

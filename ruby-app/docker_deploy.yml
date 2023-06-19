@@ -1,0 +1,64 @@
+---
+- name: Install Docker on CentOS 7
+  hosts: all
+  become: true
+  vars:
+    app_user: "roys"
+  tasks:
+    - name: Update package manager
+      yum:
+        name: '*'
+        state: latest
+      register: update_result
+
+    - name: Install Docker dependencies
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: Add Docker official repository
+      shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: latest
+
+    - name: Enable and start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Install docker-compose
+      get_url:
+        url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+
+     - name: Create symlink for docker-compose
+       file:
+         src: /usr/local/bin/docker-compose
+         dest: /usr/bin/docker-compose
+         state: link
+
+- name: Deploy application using Docker Compose
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy Docker Compose file
+      copy:
+        src: docker
+        dest: /home/roys/
+
+    - name: Build Docker images using Docker Compose
+      become: true
+      command: docker-compose -f /home/roys/docker/docker-compose.yml build
+      args:
+        chdir: /home/roys/docker
+
+    - name: Start application using Docker Compose
+      command: docker-compose -f /home/roys/docker/docker-compose.yml up -d
