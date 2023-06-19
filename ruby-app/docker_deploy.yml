@@ -45,6 +45,11 @@
          dest: /usr/bin/docker-compose
          state: link
 
+     - name: Copy nginx.conf
+       copy:
+         src: files/nginx.conf
+         dest: /home/roys/docker/xpaste_practicum/config/nginx.conf
+
 - name: Deploy application using Docker Compose
   hosts: all
   become: true
