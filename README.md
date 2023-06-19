@@ -24,14 +24,11 @@ vars:
 
 #### Роли:
 
-roles/postgres:
+roles/postgres: Описание: Роль для установки  Postgres-server 
 
-Описание: Роль для установки  Postgres-server 
+roles/app - Описание: Роль для развертывания и настройки приложения Ruby
 
-Описание: Роль для развертывания и настройки приложения Ruby
-roles/nginxinc.nginx:
-
-Описание: Роль для развертывания и настройки приложения  Nginx
+roles/nginxinc.nginx: Роль для развертывания и настройки приложения  Nginx
 
 #### Deploy с помощью docker:
 
